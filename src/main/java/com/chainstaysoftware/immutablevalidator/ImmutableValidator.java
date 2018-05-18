@@ -62,6 +62,9 @@ public class ImmutableValidator {
       if (assumeImmutable.contains(field.getName()))
          return;
 
+      if (field.getName().startsWith("$"))
+         return;
+
       if (!Modifier.isFinal(field.getModifiers()))
          throw new NotImmutableException(field.getName() + " is not a final field");
 
