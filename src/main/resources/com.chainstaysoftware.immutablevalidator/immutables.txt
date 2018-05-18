@@ -1,0 +1,3 @@
+# List of classes to treat as Immutable. Must be fully qualified class name.
+java.io.File
+org.slf4j.Logger
