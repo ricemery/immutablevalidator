@@ -7,6 +7,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Used to validate if Java class is immutable. Note, that only the class under
+ * test is checked, and the class' member variables are checked. The entire
+ * class hierarchy is NOT validated.
+ */
 public class ImmutableValidator {
    private Set<String> immutables = new Immutables().get();
    private Class clazz;
@@ -15,49 +20,101 @@ public class ImmutableValidator {
 
    private ImmutableValidator() {}
 
+   /**
+    * Creates a {@link ImmutableValidator} instance for the passed in
+    * {@link Class}
+    * @param clazz {@link Class} to test
+    * @return {@link ImmutableValidator} instance.
+    */
    public static ImmutableValidator immutableValidator(final Class clazz) {
       final ImmutableValidator validator = new ImmutableValidator();
       validator.clazz = clazz;
       return validator;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume {@link Class} is
+    * immutable.
+    * @param clazz {@link Class} to assume is immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableClasses(final Class clazz) {
       immutables.add(clazz.getCanonicalName());
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume array of {@link Class} that
+    * are immutable.
+    * @param classes Array of {@link Class} to assume immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableClasses(final Class... classes) {
       Arrays.stream(classes).forEach(clazz ->
          immutables.add(clazz.getCanonicalName()));
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume collection of {@link Class} that
+    * are immutable.
+    * @param classes Collection of {@link Class} to assume immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableClasses(final Collection<Class> classes) {
       classes.forEach(clazz ->
          immutables.add(clazz.getCanonicalName()));
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume collection of fields that are
+    * immutable.
+    * @param fieldNames Collection of fieldNames assume immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableFields(final Collection<String> fieldNames) {
       assumeImmutable.addAll(fieldNames);
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume array of fields that are
+    * immutable.
+    * @param fieldNames Array of fieldNames assume immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableFields(final String... fieldNames) {
       assumeImmutable.addAll(Arrays.asList(fieldNames));
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to assume field that is
+    * immutable.
+    * @param fieldName fieldName to assume immutable.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator immutableFields(final String fieldName) {
       assumeImmutable.add(fieldName);
       return this;
    }
 
+   /**
+    * Informs {@link ImmutableValidator} to allow for the class under test
+    * to NOT be final.
+    * @return {@link ImmutableValidator} instance.
+    */
    public ImmutableValidator allowSubclassing() {
       this.allowSubclassing = true;
       return this;
    }
 
+   /**
+    * Performs validation.
+    * @throws NotImmutableException if the code detects that the class
+    * under test is mutable.
+    */
    public void validate() {
       if (clazz == null)
          throw new IllegalStateException("Class not set to validate");
