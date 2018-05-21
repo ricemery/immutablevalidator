@@ -1,6 +1,13 @@
 package com.chainstaysoftware.immutablevalidator;
 
 
+import com.chainstaysoftware.immutablevalidator.testclasses.ImmutableClass;
+import com.chainstaysoftware.immutablevalidator.testclasses.ImmutableClassWithArray;
+import com.chainstaysoftware.immutablevalidator.testclasses.ImmutableClassWithClass;
+import com.chainstaysoftware.immutablevalidator.testclasses.ImmutableClassWithFile;
+import com.chainstaysoftware.immutablevalidator.testclasses.ImmutableClassWithList;
+import com.chainstaysoftware.immutablevalidator.testclasses.NotFinalClass;
+import com.chainstaysoftware.immutablevalidator.testclasses.NotFinalClass2;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -19,7 +26,7 @@ class ImmutableValidatorTest {
    @Test
    void validateImmutableWithList() {
       immutableValidator(ImmutableClassWithList.class)
-         .immutableField("list")
+         .immutableField("list", "list2")
          .validate();
    }
 
@@ -36,7 +43,7 @@ class ImmutableValidatorTest {
    @Test
    void validateImmutableWithList_DontAssume() {
       assertThatExceptionOfType(NotImmutableException.class)
-         .as("Class with list is immutable if no assumptions are made")
+         .as("Class with list is mutable if no assumptions are made")
          .isThrownBy(() -> immutableValidator(ImmutableClassWithList.class)
             .validate());
    }
@@ -50,16 +57,55 @@ class ImmutableValidatorTest {
    }
 
    @Test
-   void validateNotFinalALlowSubclassing() {
+   void validateNotFinalAllowSubclassing() {
       immutableValidator(NotFinalClass.class)
          .allowSubclassing()
          .validate();
    }
 
-
    @Test
    void validateImmutableWithFile() {
       immutableValidator(ImmutableClassWithFile.class)
+         .validate();
+   }
+
+   @Test
+   void validateImmutableWithArray() {
+      immutableValidator(ImmutableClassWithArray.class)
+         .immutableField("foo")
+         .validate();
+   }
+
+   @Test
+   void validateImmutableWithClass() {
+      immutableValidator(ImmutableClassWithClass.class)
+         .immutableClass(NotFinalClass.class)
+         .validate();
+   }
+
+   @Test
+   void validateImmutableWithClassFail() {
+      assertThatExceptionOfType(NotImmutableException.class)
+         .as("Class with mutable member is mutable if no assumptions are made")
+         .isThrownBy(() -> immutableValidator(ImmutableClassWithClass.class)
+            .validate());
+   }
+
+   @Test
+   void validateImmutableWithMultClass() {
+      immutableValidator(ImmutableClassWithClass.class)
+         .immutableClass(NotFinalClass.class, NotFinalClass2.class)
+         .validate();
+   }
+
+   @Test
+   void validateImmutableWithMultClass2() {
+      final List<Class> assumptions = new LinkedList<>();
+      assumptions.add(NotFinalClass.class);
+      assumptions.add( NotFinalClass2.class);
+
+      immutableValidator(ImmutableClassWithClass.class)
+         .immutableClass(assumptions)
          .validate();
    }
 }

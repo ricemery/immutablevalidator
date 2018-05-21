@@ -26,6 +26,18 @@ public class ImmutableValidator {
       return this;
    }
 
+   public ImmutableValidator immutableClass(final Class... classes) {
+      Arrays.stream(classes).forEach(clazz ->
+         immutables.add(clazz.getCanonicalName()));
+      return this;
+   }
+
+   public ImmutableValidator immutableClass(final Collection<Class> classes) {
+      classes.forEach(clazz ->
+         immutables.add(clazz.getCanonicalName()));
+      return this;
+   }
+
    public ImmutableValidator immutableField(final Collection<String> fieldNames) {
       assumeImmutable.addAll(fieldNames);
       return this;
@@ -64,6 +76,9 @@ public class ImmutableValidator {
 
       if (field.getName().startsWith("$"))
          return;
+
+      if (field.getType().isArray())
+         throw new NotImmutableException(field.getName() + " is any array. Validate that the array is safely copied.");
 
       if (!Modifier.isFinal(field.getModifiers()))
          throw new NotImmutableException(field.getName() + " is not a final field");

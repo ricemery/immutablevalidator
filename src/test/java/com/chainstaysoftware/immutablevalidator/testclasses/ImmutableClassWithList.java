@@ -1,4 +1,4 @@
-package com.chainstaysoftware.immutablevalidator;
+package com.chainstaysoftware.immutablevalidator.testclasses;
 
 import com.google.common.collect.ImmutableList;
 
