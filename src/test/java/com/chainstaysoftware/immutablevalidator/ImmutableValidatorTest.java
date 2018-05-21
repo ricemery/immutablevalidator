@@ -26,7 +26,7 @@ class ImmutableValidatorTest {
    @Test
    void validateImmutableWithList() {
       immutableValidator(ImmutableClassWithList.class)
-         .immutableField("list", "list2")
+         .immutableFields("list", "list2")
          .validate();
    }
 
@@ -36,7 +36,7 @@ class ImmutableValidatorTest {
       assumptions.add("list");
 
       immutableValidator(ImmutableClassWithList.class)
-         .immutableField(assumptions)
+         .immutableFields(assumptions)
          .validate();
    }
 
@@ -72,14 +72,14 @@ class ImmutableValidatorTest {
    @Test
    void validateImmutableWithArray() {
       immutableValidator(ImmutableClassWithArray.class)
-         .immutableField("foo")
+         .immutableFields("foo")
          .validate();
    }
 
    @Test
    void validateImmutableWithClass() {
       immutableValidator(ImmutableClassWithClass.class)
-         .immutableClass(NotFinalClass.class)
+         .immutableClasses(NotFinalClass.class)
          .validate();
    }
 
@@ -94,7 +94,7 @@ class ImmutableValidatorTest {
    @Test
    void validateImmutableWithMultClass() {
       immutableValidator(ImmutableClassWithClass.class)
-         .immutableClass(NotFinalClass.class, NotFinalClass2.class)
+         .immutableClasses(NotFinalClass.class, NotFinalClass2.class)
          .validate();
    }
 
@@ -105,7 +105,7 @@ class ImmutableValidatorTest {
       assumptions.add( NotFinalClass2.class);
 
       immutableValidator(ImmutableClassWithClass.class)
-         .immutableClass(assumptions)
+         .immutableClasses(assumptions)
          .validate();
    }
 }

@@ -30,7 +30,7 @@ to the utility that the collection or array is handled properly.
 
 ```java
   immutableValidator(ImmutableClassWithList.class)
-     .immutableField("list", "list2")
+     .immutableFields("list", "list2")
      .validate();
 ```
 

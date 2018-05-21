@@ -21,34 +21,34 @@ public class ImmutableValidator {
       return validator;
    }
 
-   public ImmutableValidator immutableClass(final Class clazz) {
+   public ImmutableValidator immutableClasses(final Class clazz) {
       immutables.add(clazz.getCanonicalName());
       return this;
    }
 
-   public ImmutableValidator immutableClass(final Class... classes) {
+   public ImmutableValidator immutableClasses(final Class... classes) {
       Arrays.stream(classes).forEach(clazz ->
          immutables.add(clazz.getCanonicalName()));
       return this;
    }
 
-   public ImmutableValidator immutableClass(final Collection<Class> classes) {
+   public ImmutableValidator immutableClasses(final Collection<Class> classes) {
       classes.forEach(clazz ->
          immutables.add(clazz.getCanonicalName()));
       return this;
    }
 
-   public ImmutableValidator immutableField(final Collection<String> fieldNames) {
+   public ImmutableValidator immutableFields(final Collection<String> fieldNames) {
       assumeImmutable.addAll(fieldNames);
       return this;
    }
 
-   public ImmutableValidator immutableField(final String... fieldNames) {
+   public ImmutableValidator immutableFields(final String... fieldNames) {
       assumeImmutable.addAll(Arrays.asList(fieldNames));
       return this;
    }
 
-   public ImmutableValidator immutableField(final String fieldName) {
+   public ImmutableValidator immutableFields(final String fieldName) {
       assumeImmutable.add(fieldName);
       return this;
    }
